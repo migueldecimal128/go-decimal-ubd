@@ -13,14 +13,15 @@ Items are open unless checked. When an item is done, check it and note where
       - decimal128: `+0E6879` → `0E+6111`, `-0E-9000` → `-0E-6176`;
       - decimal64: the limits are 369 and −398.
 
-      The Cairo adapter (c28bef9e67, `src/internal/bid/vectors_test.go`) does this
+      The Cairo adapter (8561332808, `src/internal/bid/vectors_test.go`) does this
       cap in its own vector reader, which encodes operands through the reference
       codec. So the Cairo run does not show what the fork's Parse does.
 
       Check every text entry point: math/decimal's Parse, strconv, and decimal
-      constants in the compiler. decTest cases dqbas1075–1078 (`toSci ±0e±10000
-      -> ±0E+6111 / ±0E-6176 Clamped`) go through the target's Parse; confirm they
-      run and pass rather than being skipped. If the parser already caps, consider
+      constants in the compiler. The IBM cases dqbas1075–1078 (toSci of ±0
+      with an exponent of ±10000, expecting ±0E+6111 or ±0E-6176 and Clamped)
+      go through the target's Parse; confirm they run and pass rather than
+      being skipped. If the parser already caps, consider
       dropping the reader's own cap.
 
       The decimal128 ports do this cap in the core parse
